@@ -1,4 +1,4 @@
-package com.pdv.entity;
+package com.pdv.pdv.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

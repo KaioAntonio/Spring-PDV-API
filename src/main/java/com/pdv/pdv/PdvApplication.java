@@ -1,4 +1,4 @@
-package com.pdv;
+package com.pdv.pdv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
