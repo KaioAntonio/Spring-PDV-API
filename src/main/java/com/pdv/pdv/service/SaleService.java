@@ -8,6 +8,8 @@ import com.pdv.pdv.entity.ItemSale;
 import com.pdv.pdv.entity.Product;
 import com.pdv.pdv.entity.Sale;
 import com.pdv.pdv.entity.User;
+import com.pdv.pdv.exceptions.InvalidOperationException;
+import com.pdv.pdv.exceptions.NoItemException;
 import com.pdv.pdv.repository.ItemSaleRepository;
 import com.pdv.pdv.repository.ProductRepository;
 import com.pdv.pdv.repository.SaleRepository;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +48,7 @@ public class SaleService {
     private List<ProductsInfoDTO> getProductInfo(List<ItemSale> items) {
         return items.stream().map(item -> {
             ProductsInfoDTO productsInfoDTO = new ProductsInfoDTO();
+            productsInfoDTO.setId(item.getId());
             productsInfoDTO.setDescription(item.getProduct().getDescription());
             productsInfoDTO.setQuantity(item.getQuantity());
             return productsInfoDTO;
@@ -54,17 +58,23 @@ public class SaleService {
     @Transactional
     public long save(SaleDTO sale){
 
-        User user = userRepository.findById(sale.getUserid()).get();
+        Optional<User> optional = userRepository.findById(sale.getUserid());
 
-        Sale newSale = new Sale();
-        newSale.setUser(user);
-        newSale.setDate(LocalDate.now());
-        List<ItemSale> items = getItemSale(sale.getItems());
-        Sale s = saleRepository.save(newSale);
+        if (optional.isPresent()){
+            User user = optional.get();
 
-        saveItemSale(items, newSale);
+            Sale newSale = new Sale();
+            newSale.setUser(user);
+            newSale.setDate(LocalDate.now());
+            List<ItemSale> items = getItemSale(sale.getItems());
+            Sale s = saleRepository.save(newSale);
 
-        return newSale.getId();
+            saveItemSale(items, newSale);
+
+            return newSale.getId();
+        } else {
+            throw new NoItemException("Usuário não encontrado!");
+        }
     }
 
     private void saveItemSale(List<ItemSale> items, Sale newSale) {
@@ -75,6 +85,11 @@ public class SaleService {
     }
 
     private List<ItemSale> getItemSale(List<ProductDTO> products) {
+
+        if(products.isEmpty()){
+            throw new InvalidOperationException("Não é possivel adicionar a venda sem itens!");
+        }
+
         return products.stream().map(item -> {
             Product product = productRepository.getReferenceById(item.getProductid());
 
@@ -83,9 +98,10 @@ public class SaleService {
             itemSale.setQuantity(item.getQuantity());
 
             if(product.getQuantity() == 0) {
-                throw new IllegalArgumentException();
+                throw new NoItemException("Produto sem estoque.");
             } else if (product.getQuantity() < item.getQuantity()){
-                throw new IllegalArgumentException();
+                throw new InvalidOperationException(String.format("A quantidade de itens da venda (%s) " +
+                        "é maior que a quantidade disponível no estoque (%s)", item.getQuantity(), product.getQuantity()));
             }
 
             int total = product.getQuantity() - item.getQuantity();
@@ -97,8 +113,14 @@ public class SaleService {
     }
 
     public SaleInfoDTO getById(long id) {
-        Sale sale = saleRepository.findById(id).get();
-        return getSaleInfo(sale);
+        Optional<Sale> optional = saleRepository.findById(id);
+        if (optional.isPresent()){
+            Sale sale = optional.get();
+            return getSaleInfo(sale);
+        } else {
+            throw new NoItemException("Venda não encontrada!");
+        }
+
 
     }
 }

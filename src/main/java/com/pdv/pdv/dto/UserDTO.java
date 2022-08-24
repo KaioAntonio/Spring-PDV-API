@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductsInfoDTO {
+public class UserDTO {
 
     private long id;
-    private String description;
-    private int quantity;
+    private String name;
+    private boolean isEnabled;
+
 }
