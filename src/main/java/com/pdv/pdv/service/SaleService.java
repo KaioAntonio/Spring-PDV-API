@@ -91,7 +91,8 @@ public class SaleService {
         }
 
         return products.stream().map(item -> {
-            Product product = productRepository.getReferenceById(item.getProductid());
+            Product product = productRepository.findById(item.getProductid())
+                    .orElseThrow(() -> new NoItemException("Item da venda não encontrado"));
 
             ItemSale itemSale = new ItemSale();
             itemSale.setProduct(product);
