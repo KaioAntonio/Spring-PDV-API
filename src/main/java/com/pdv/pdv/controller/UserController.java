@@ -1,10 +1,7 @@
 package com.pdv.pdv.controller;
 
 import com.pdv.pdv.dto.ResponseDTO;
-import com.pdv.pdv.dto.UserDTO;
 import com.pdv.pdv.entity.User;
-import com.pdv.pdv.exceptions.NoItemException;
-import com.pdv.pdv.repository.UserRepository;
 import com.pdv.pdv.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.Option;
-import java.util.Optional;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -32,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@RequestBody User user){
+    public ResponseEntity post(@Valid @RequestBody User user){
         try{
             user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
@@ -42,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity put(@RequestBody User user){
+    public ResponseEntity put(@Valid @RequestBody User user){
         try{
             return new ResponseEntity(userService.update(user), HttpStatus.OK);
         } catch (Exception error){
