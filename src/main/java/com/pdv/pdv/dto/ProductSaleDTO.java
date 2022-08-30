@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaleDTO {
+public class ProductSaleDTO {
 
-    private long userid;
-
-    List<ProductSaleDTO> items;
-    
+    private long productid;
+    private int quantity;
 
 }

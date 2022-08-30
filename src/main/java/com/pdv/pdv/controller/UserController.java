@@ -1,6 +1,7 @@
 package com.pdv.pdv.controller;
 
 import com.pdv.pdv.dto.ResponseDTO;
+import com.pdv.pdv.dto.UserDTO;
 import com.pdv.pdv.entity.User;
 import com.pdv.pdv.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity post(@Valid @RequestBody User user){
+    public ResponseEntity post(@Valid @RequestBody UserDTO user){
         try{
             user.setEnabled(true);
             return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity put(@Valid @RequestBody User user){
+    public ResponseEntity put(@Valid @RequestBody UserDTO user){
         try{
             return new ResponseEntity(userService.update(user), HttpStatus.OK);
         } catch (Exception error){
