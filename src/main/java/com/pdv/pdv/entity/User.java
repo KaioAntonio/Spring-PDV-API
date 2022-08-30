@@ -18,9 +18,11 @@ public class User {
     private Long id;
 
     @Column(length = 100, nullable = false)
-    @NotBlank(message = "Campo nome é obrigatório")
     private String name;
-
+    @Column(length = 30, nullable = false)
+    private String username;
+    @Column(length = 60, nullable = false)
+    private String password;
     private boolean isEnabled;
 
     @OneToMany(mappedBy = "user")

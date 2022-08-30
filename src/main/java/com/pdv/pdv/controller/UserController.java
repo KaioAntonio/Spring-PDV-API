@@ -2,7 +2,6 @@ package com.pdv.pdv.controller;
 
 import com.pdv.pdv.dto.ResponseDTO;
 import com.pdv.pdv.dto.UserDTO;
-import com.pdv.pdv.entity.User;
 import com.pdv.pdv.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
