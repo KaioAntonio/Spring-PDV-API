@@ -36,7 +36,7 @@ public class SaleService {
     private final ItemSaleRepository itemSaleRepository;
 
     public List<SaleInfoDTO> findAll(){
-        return saleRepository.findAll().stream().map(sale -> getSaleInfo(sale)).collect(Collectors.toList());
+        return saleRepository.findAll().stream().map(this::getSaleInfo).collect(Collectors.toList());
     }
 
     private SaleInfoDTO getSaleInfo(Sale sale) {
@@ -74,7 +74,7 @@ public class SaleService {
             newSale.setUser(user);
             newSale.setDate(LocalDate.now());
             List<ItemSale> items = getItemSale(sale.getItems());
-            Sale s = saleRepository.save(newSale);
+            saleRepository.save(newSale);
 
             saveItemSale(items, newSale);
 

@@ -3,7 +3,6 @@ package com.pdv.pdv.controller;
 import com.pdv.pdv.dto.ResponseDTO;
 import com.pdv.pdv.exceptions.InvalidOperationException;
 import com.pdv.pdv.exceptions.NoItemException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
